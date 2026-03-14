@@ -17,6 +17,10 @@ public class Main {
 
         int choice = -1;
 
+        System.out.println("=================================");
+        System.out.println("   Welcome to the Grocery Store  ");
+        System.out.println("=================================");
+
         while (choice != 7) {
             System.out.println("\n===== Grocery Store Menu =====");
             System.out.println("1. View Regular Customer Info");
@@ -70,7 +74,7 @@ public class Main {
                     break;
 
                 case 7:
-                    System.out.println("Exiting program...");
+                    System.out.println("Thank you for using the Grocery Store System!");
                     break;
 
                 default:
