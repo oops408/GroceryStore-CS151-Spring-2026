@@ -28,9 +28,19 @@ public abstract class Customer implements Displayable {
         return lastName;
     }
 
+    // for Manager
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     public ShoppingCart getCart() {
         return cart;
     }
+
+    // for Manager
+    public void printCustomerHistory() {
+    System.out.println("No purchase history available yet.");
+}
 
     @Override
     public void displayCustomerInfo() {

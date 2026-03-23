@@ -3,7 +3,7 @@ package employee;
 import inventory.Inventory;
 import products.Products;
 import shelf.Shelf;
-import customer.Customer;
+import customers.Customer;
 
 public class Manager extends Employee {
 
