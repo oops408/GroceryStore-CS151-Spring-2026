@@ -158,16 +158,7 @@ public class Main {
             System.out.println("11. View Low Stock Products");
             System.out.println("12. View Aisles");
             System.out.println("13. Exit");
-            System.out.print("Enter your choice: ");
-
-            if (scanner.hasNextInt()) {
-                choice = scanner.nextInt();
-                scanner.nextLine();
-            } else {
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine();
-                continue;
-            }
+            choice = readIntInput(scanner, "Enter your choice: ");
 
             switch (choice) {
                 case 1:
@@ -180,14 +171,12 @@ public class Main {
                     break;
 
                 case 3:
-                    System.out.print("Enter item to add: ");
-                    String addItem = scanner.nextLine();
+                    String addItem = readLineInput(scanner, "Enter item to add: ");
                     customer1.getCart().addItem(addItem);
                     break;
 
                 case 4:
-                    System.out.print("Enter item to remove: ");
-                    String removeItem = scanner.nextLine();
+                    String removeItem = readLineInput(scanner, "Enter item to remove: ");
                     customer1.getCart().removeItem(removeItem);
                     break;
 
@@ -207,83 +196,52 @@ public class Main {
 
                 case 8:
                     try {
-                        System.out.print("Enter product ID to find: ");
-                        int productId = scanner.nextInt();
-                        scanner.nextLine();
+                        int productId = readIntInput(scanner, "Enter product ID to find: ");
 
                         Products found = inventory.findProduct(productId);
                         System.out.println("Found: " + found);
                     } catch (NotFoundException e) {
                         System.out.println("Search error: " + e.getMessage());
-                    } catch (Exception e) {
-                        System.out.println("Invalid input.");
-                        scanner.nextLine();
                     }
                     break;
 
                 case 9:
                     try {
-                        System.out.print("Enter section: ");
-                        String section = scanner.nextLine();
-
-                        System.out.print("Enter product ID: ");
-                        int productId = scanner.nextInt();
-
-                        System.out.print("Enter quantity to restock: ");
-                        int quantity = scanner.nextInt();
-                        scanner.nextLine();
+                        String section = readLineInput(scanner, "Enter section: ");
+                        int productId = readIntInput(scanner, "Enter product ID: ");
+                        int quantity = readIntInput(scanner, "Enter quantity to restock: ");
 
                         inventory.restockProduct(section, productId, quantity);
                         System.out.println("Product restocked successfully.");
                     } catch (NotFoundException | InvalidQuantityException e) {
                         System.out.println("Restock error: " + e.getMessage());
-                    } catch (Exception e) {
-                        System.out.println("Invalid input.");
-                        scanner.nextLine();
                     }
                     break;
 
                 case 10:
                     try {
-                        System.out.print("Enter section: ");
-                        String section = scanner.nextLine();
-
-                        System.out.print("Enter product ID: ");
-                        int productId = scanner.nextInt();
-
-                        System.out.print("Enter quantity to decrease: ");
-                        int quantity = scanner.nextInt();
-                        scanner.nextLine();
+                        String section = readLineInput(scanner, "Enter section: ");
+                        int productId = readIntInput(scanner, "Enter product ID: ");
+                        int quantity = readIntInput(scanner, "Enter quantity to decrease: ");
 
                         inventory.decreaseStock(section, productId, quantity);
                         System.out.println("Product stock decreased successfully.");
                     } catch (NotFoundException | InvalidQuantityException e) {
                         System.out.println("Decrease stock error: " + e.getMessage());
-                    } catch (Exception e) {
-                        System.out.println("Invalid input.");
-                        scanner.nextLine();
                     }
                     break;
 
                 case 11:
-                    try {
-                        System.out.print("Enter low-stock threshold: ");
-                        int threshold = scanner.nextInt();
-                        scanner.nextLine();
+                    int threshold = readIntInput(scanner, "Enter low-stock threshold: ");
+                    List<Products> lowStockProducts = inventory.listLowStock(threshold);
 
-                        List<Products> lowStockProducts = inventory.listLowStock(threshold);
-
-                        if (lowStockProducts.isEmpty()) {
-                            System.out.println("No low-stock products found.");
-                        } else {
-                            System.out.println("Low-stock products:");
-                            for (Products product : lowStockProducts) {
-                                System.out.println(product);
-                            }
+                    if (lowStockProducts.isEmpty()) {
+                        System.out.println("No low-stock products found.");
+                    } else {
+                        System.out.println("Low-stock products:");
+                        for (Products product : lowStockProducts) {
+                            System.out.println(product);
                         }
-                    } catch (Exception e) {
-                        System.out.println("Invalid input.");
-                        scanner.nextLine();
                     }
                     break;
 
@@ -297,9 +255,7 @@ public class Main {
                         System.out.println("0. Back to main menu");
 
                         try {
-                            System.out.print("Enter aisle number to view: ");
-                            int selectedAisleNumber = scanner.nextInt();
-                            scanner.nextLine();
+                            int selectedAisleNumber = readIntInput(scanner, "Enter aisle number to view: ");
 
                             if (selectedAisleNumber == 0) {
                                 viewingAisles = false;
@@ -324,10 +280,7 @@ public class Main {
                                 selectedAisle.printAisle();
                                 System.out.println("\n1. Buy from this aisle");
                                 System.out.println("2. Back to aisle list");
-                                System.out.print("Choose an option: ");
-
-                                int aisleAction = scanner.nextInt();
-                                scanner.nextLine();
+                                int aisleAction = readIntInput(scanner, "Choose an option: ");
 
                                 if (aisleAction == 2) {
                                     viewingSingleAisle = false;
@@ -339,11 +292,8 @@ public class Main {
                                     continue;
                                 }
 
-                                System.out.print("Enter product ID to buy: ");
-                                int productIdToBuy = scanner.nextInt();
-                                System.out.print("Enter quantity to buy: ");
-                                int quantityToBuy = scanner.nextInt();
-                                scanner.nextLine();
+                                int productIdToBuy = readIntInput(scanner, "Enter product ID to buy: ");
+                                int quantityToBuy = readIntInput(scanner, "Enter quantity to buy: ");
 
                                 if (quantityToBuy <= 0) {
                                     System.out.println("Quantity must be greater than 0.");
@@ -377,7 +327,6 @@ public class Main {
                             }
                         } catch (Exception e) {
                             System.out.println("Invalid input.");
-                            scanner.nextLine();
                         }
                     }
                     break;
@@ -392,5 +341,33 @@ public class Main {
         }
 
         scanner.close();
+    }
+
+    private static String readLineInput(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase("EXIT")) {
+            gracefulExit(scanner);
+        }
+
+        return input;
+    }
+
+    private static int readIntInput(Scanner scanner, String prompt) {
+        while (true) {
+            String input = readLineInput(scanner, prompt);
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+    private static void gracefulExit(Scanner scanner) {
+        System.out.println("EXIT keyword detected. Closing the Grocery Store System. Goodbye!");
+        scanner.close();
+        System.exit(0);
     }
 }
