@@ -1,13 +1,14 @@
 import customers.RegularCustomer;
 import customers.VIPCustomer;
-import inventory.Inventory;
-import products.Products;
+import data.StoreDataLoader;
+import aisles.Aisles;
 import exceptions.CapacityExceededException;
-import exceptions.NotFoundException;
 import exceptions.InvalidQuantityException;
-
+import exceptions.NotFoundException;
+import inventory.Inventory;
 import java.util.List;
 import java.util.Scanner;
+import products.Products;
 
 public class Main {
     public static void main(String[] args) {
@@ -24,6 +25,7 @@ public class Main {
 
         // Inventory setup
         Inventory inventory = new Inventory();
+        List<Aisles> aisles = StoreDataLoader.loadDefaultAisles();
 
         System.out.println("=================================");
         System.out.println("   Welcome to the Grocery Store  ");
@@ -141,7 +143,7 @@ public class Main {
         // Menu
         int choice = -1;
 
-        while (choice != 12) {
+        while (choice != 13) {
             System.out.println("\n===== Grocery Store Menu =====");
             System.out.println("1. View Regular Customer Info");
             System.out.println("2. View Regular Customer Cart");
@@ -154,7 +156,8 @@ public class Main {
             System.out.println("9. Restock Product");
             System.out.println("10. Decrease Product Stock");
             System.out.println("11. View Low Stock Products");
-            System.out.println("12. Exit");
+            System.out.println("12. View Aisles");
+            System.out.println("13. Exit");
             System.out.print("Enter your choice: ");
 
             if (scanner.hasNextInt()) {
@@ -285,6 +288,36 @@ public class Main {
                     break;
 
                 case 12:
+                    System.out.println("\nAvailable aisles:");
+                    for (Aisles aisle : aisles) {
+                        System.out.println("- Aisle " + aisle.getAisleNumber() + " (" + aisle.getAisleType() + ")");
+                    }
+
+                    try {
+                        System.out.print("Enter aisle number to view: ");
+                        int selectedAisleNumber = scanner.nextInt();
+                        scanner.nextLine();
+
+                        Aisles selectedAisle = null;
+                        for (Aisles aisle : aisles) {
+                            if (aisle.getAisleNumber() == selectedAisleNumber) {
+                                selectedAisle = aisle;
+                                break;
+                            }
+                        }
+
+                        if (selectedAisle == null) {
+                            System.out.println("Aisle not found.");
+                        } else {
+                            selectedAisle.printAisle();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Invalid input.");
+                        scanner.nextLine();
+                    }
+                    break;
+
+                case 13:
                     System.out.println("Thank you for using the Grocery Store System!");
                     break;
 
