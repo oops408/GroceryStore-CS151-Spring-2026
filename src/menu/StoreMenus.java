@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Scanner;
 import products.Products;
 import shelf.Shelf;
-
+// Menu templates and information live here so Main stays uncluttered.
 public final class StoreMenus {
 
     private StoreMenus() {
     }
-
+// regular customer information
     public static void runRegularCustomerSession(Scanner scanner, RegularCustomer customer,
             Inventory inventory, List<Aisles> aisles) {
         int sub = -1;
@@ -63,7 +63,7 @@ public final class StoreMenus {
             }
         }
     }
-
+// users select options based on terminal prompts
     public static void runVipCustomerSession(Scanner scanner, VIPCustomer customer,
             Inventory inventory, List<Aisles> aisles, RegularCustomer otherCustomer) {
         int sub = -1;
