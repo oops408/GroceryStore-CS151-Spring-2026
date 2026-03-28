@@ -662,14 +662,22 @@ public final class EmployeeMenu {
 
                                     switch (customerChoice) {
                                         case 1:
+                                            if (customer1 == null) {
+                                                System.out.println("No regular customer has been registered yet.");
+                                                break;
+                                            }
                                             System.out.println();
                                             System.out.println("--- Regular Customer ---");
                                             customer1.displayCustomerInfo();
                                             customer1.getCart().viewCart();
                                             manager.viewCustomerHistory(customer1);
                                             break;
-                                        
+
                                         case 2:
+                                            if (customer2 == null) {
+                                                System.out.println("No VIP customer has been registered yet.");
+                                                break;
+                                            }
                                             System.out.println();
                                             System.out.println("--- VIP Customer ---");
                                             customer2.displayCustomerInfo();

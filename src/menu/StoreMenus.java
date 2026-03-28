@@ -169,6 +169,8 @@ public final class StoreMenus {
                     Customer cartCustomer;
                     if (secondaryCart == null) {
                         cartCustomer = primaryCart;
+                    } else if (primaryCart == null) {
+                        cartCustomer = secondaryCart;
                     } else {
                         System.out.println("1. Regular customer's cart (ID " + primaryCart.getCustomerId() + ")");
                         System.out.println("2. VIP customer's cart (ID " + secondaryCart.getCustomerId() + ")");
@@ -181,6 +183,11 @@ public final class StoreMenus {
                             System.out.println("Invalid choice.");
                             continue;
                         }
+                    }
+
+                    if (cartCustomer == null) {
+                        System.out.println("No customer cart is available.");
+                        continue;
                     }
 
                     int productIdToBuy = ConsoleInput.readInt(scanner, "Enter product ID to buy: ");
