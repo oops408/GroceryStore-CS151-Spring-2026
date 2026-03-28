@@ -13,7 +13,7 @@ public class Products {
     private int quantity;
     private int id;
    
-    public Products(String name, double price, int quantity, int id) {
+    public Products(String name, double price, int quantity, int id) 
         throws InvalidProductException, InvalidPriceException, InvalidQuantityException {
 
         if (name == null || name.trim().isEmpty()) {
@@ -54,21 +54,21 @@ public class Products {
         return id;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws InvalidProductException {
         if (name == null || name.trim().isEmpty()) {
             throw new InvalidProductException("Product name cannot be empty.");
         }
         this.name = name.trim();
     }
 
-    public void setPrice(double price) {
+    public void setPrice(double price) throws InvalidPriceException {
         if (price < 0) {
             throw new InvalidPriceException("Price cannot be negative.");
         }
         this.price = price;
     }
      // cannot be negative
-    public void setQuantity(int quantity) {
+    public void setQuantity(int quantity) throws InvalidQuantityException {
        if (quantity < 0) {
             throw new InvalidQuantityException("Quantity cannot be negative.");
         }
@@ -76,7 +76,7 @@ public class Products {
     }
 
     // used by Stocker
-    public void stockToShelf(int amount) {
+    public void stockToShelf(int amount) throws InvalidQuantityException {
         if (amount <= 0) {
             throw new InvalidQuantityException("Stock amount must be positive.");
         }
