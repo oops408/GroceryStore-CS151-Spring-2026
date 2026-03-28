@@ -199,16 +199,7 @@ public class Main {
             System.out.println("12. View Aisles");
             System.out.println("13. Employee Menu");
             System.out.println("14. Exit");
-            System.out.print("Enter your choice: ");
-
-            if (scanner.hasNextInt()) {
-                choice = scanner.nextInt();
-                scanner.nextLine();
-            } else {
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine();
-                continue;
-            }
+            choice = readIntInput(scanner, "Enter your choice: ");
 
             switch (choice) {
                 case 1:
@@ -380,7 +371,8 @@ public class Main {
                         }
                     }
                     break;
-                    case 13: // asks if what kind of employee you are stocker or manager
+
+                case 13: // asks if what kind of employee you are stocker or manager
                     System.out.println("=============================");
                     System.out.println("|     Employee Menu      |");
                     System.out.println("=============================");
@@ -388,24 +380,13 @@ public class Main {
                     System.out.println("2. Manager");
 
                     int employeeTitle = -1;
-                    
+
                     while (true) {
-                        System.out.print("Enter your title: ");
-
-                        if (!scanner.hasNextInt()) {
-                            System.out.println("Invalid input. Please enter a number.");
-                            scanner.nextLine(); // clear input
-                            continue;
-                        }
-
-                        employeeTitle = scanner.nextInt();
-                        scanner.nextLine();
-
+                        employeeTitle = readIntInput(scanner, "Enter your title: ");
                         if (employeeTitle == 1 || employeeTitle == 2) {
-                            break; // exit loop
-                        } else {
-                            System.out.println("Invalid choice. Please enter 1 or 2.");
+                            break;
                         }
+                        System.out.println("Invalid choice. Please enter 1 or 2.");
                     }
 
                     if (employeeTitle == 1) { // stocker
@@ -425,17 +406,7 @@ public class Main {
                             System.out.println("2. Restock Product");
                             System.out.println("3. View Shelf");
                             System.out.println("4. Exit Stocker Menu");
-                            System.out.print("Enter your choice: ");
-
-
-                            try {
-                                stockerInput = scanner.nextInt();
-                                scanner.nextLine();
-                            } catch (Exception e) {
-                                System.out.println("Invalid input. Please enter a number.");
-                                scanner.nextLine();
-                                continue;
-                            }
+                            stockerInput = readIntInput(scanner, "Enter your choice: ");
 
                             switch (stockerInput) {
                                 case 1:
@@ -443,10 +414,7 @@ public class Main {
                                     System.out.println("2. Dairy");
                                     System.out.println("3. Snacks");
                                     System.out.println("4. Supplies");
-                                    System.out.print("Enter section to check:");
-
-                                    int sectionChoice = scanner.nextInt();
-                                    scanner.nextLine();
+                                    int sectionChoice = readIntInput(scanner, "Enter section to check:");
 
                                     Shelf selectedShelf = null;
 
@@ -469,25 +437,17 @@ public class Main {
                                     }
 
                                     if (selectedShelf != null) {
-                                        try {
-                                            System.out.print("Enter low-stock threshold: ");
-                                            lowStockThreshold = scanner.nextInt();
-                                            scanner.nextLine();
+                                        lowStockThreshold = readIntInput(scanner, "Enter low-stock threshold: ");
 
-                                            System.out.println();
-                                            stocker.viewLowShelfStock(selectedShelf, lowStockThreshold);
+                                        System.out.println();
+                                        stocker.viewLowShelfStock(selectedShelf, lowStockThreshold);
 
-                                            for (Products product : selectedShelf.getProducts()) { // shows how much is needed
-                                                if (product.getQuantity() < lowStockThreshold) {
-                                                    System.out.println(product.getName() + " needs "
-                                                            + (lowStockThreshold - product.getQuantity())
-                                                            + " more items.");
-                                                }
+                                        for (Products product : selectedShelf.getProducts()) { // shows how much is needed
+                                            if (product.getQuantity() < lowStockThreshold) {
+                                                System.out.println(product.getName() + " needs "
+                                                        + (lowStockThreshold - product.getQuantity())
+                                                        + " more items.");
                                             }
-
-                                        } catch (Exception e) {
-                                            System.out.println("Invalid input.");
-                                            scanner.nextLine();
                                         }
                                     }
 
@@ -500,17 +460,7 @@ public class Main {
                                     System.out.println("2. Dairy");
                                     System.out.println("3. Snacks");
                                     System.out.println("4. Supplies");
-                                    System.out.print("Chosen shelf: ");
-
-                                    int restockSectionChoice;
-                                    try {
-                                        restockSectionChoice = scanner.nextInt();
-                                        scanner.nextLine();
-                                    } catch (Exception e) {
-                                        System.out.println("Invalid input.");
-                                        scanner.nextLine();
-                                        break;
-                                    }
+                                    int restockSectionChoice = readIntInput(scanner, "Chosen shelf: ");
 
                                     Shelf selectedRestockShelf = null;
                                     String restockSection = "";
@@ -558,17 +508,7 @@ public class Main {
                                         itemNumber++;
                                     }
 
-                                    System.out.print("Choose product to restock: ");
-                                    int productChoice;
-
-                                    try {
-                                        productChoice = scanner.nextInt();
-                                        scanner.nextLine();
-                                    } catch (Exception e) {
-                                        System.out.println("Invalid input.");
-                                        scanner.nextLine();
-                                        break;
-                                    }
+                                    int productChoice = readIntInput(scanner, "Choose product to restock: ");
 
                                     Products chosenProduct = null;
                                     int currentIndex = 1;
@@ -586,17 +526,7 @@ public class Main {
                                         break;
                                     }
 
-                                    System.out.print("Enter quantity to restock: ");
-                                    int restockAmount;
-
-                                    try {
-                                        restockAmount = scanner.nextInt();
-                                        scanner.nextLine();
-                                    } catch (Exception e) {
-                                        System.out.println("Invalid input.");
-                                        scanner.nextLine();
-                                        break;
-                                    }
+                                    int restockAmount = readIntInput(scanner, "Enter quantity to restock: ");
 
                                     if (restockAmount <= 0) {
                                         System.out.println("Quantity must be greater than 0.");
@@ -624,18 +554,7 @@ public class Main {
                                     System.out.println("3. Snacks");
                                     System.out.println("4. Supplies");
                                     System.out.println("5. Print All Shelves");
-                                    System.out.print("Enter choice: ");
-
-                                    int viewChoice;
-
-                                    try {
-                                        viewChoice = scanner.nextInt();
-                                        scanner.nextLine();
-                                    } catch (Exception e) {
-                                        System.out.println("Invalid input.");
-                                        scanner.nextLine();
-                                        break;
-                                    }
+                                    int viewChoice = readIntInput(scanner, "Enter choice: ");
 
                                     switch (viewChoice) {
                                         case 1:
@@ -703,16 +622,7 @@ public class Main {
                             System.out.println("5. View Inventory");
                             System.out.println("6. View Customer Info");
                             System.out.println("7. Exit Manager Menu");
-                            System.out.print("Enter your choice: ");
-
-                            try {
-                                managerInput = scanner.nextInt();
-                                scanner.nextLine();
-                            } catch (Exception e) {
-                                System.out.println("Invalid input.");
-                                scanner.nextLine();
-                                continue;
-                            }
+                            managerInput = readIntInput(scanner, "Enter your choice: ");
 
                             switch (managerInput) {
                                 case 1: // add new product to inventory
@@ -722,17 +632,7 @@ public class Main {
                                     System.out.println("2. Dairy");
                                     System.out.println("3. Snacks");
                                     System.out.println("4. Supplies");
-                                    System.out.print("Enter choice: ");
-
-                                    int addSectionChoice;
-                                    try {
-                                        addSectionChoice = scanner.nextInt();
-                                        scanner.nextLine();
-                                    } catch (Exception e) {
-                                        System.out.println("Invalid input. Try again.");
-                                        scanner.nextLine();
-                                        break;
-                                    }
+                                    int addSectionChoice = readIntInput(scanner, "Enter choice: ");
 
                                     String section = "";
 
@@ -763,15 +663,11 @@ public class Main {
                                     while (!done) {
                                         try {
                                             System.out.println();
-                                            System.out.print("Enter product name: ");
-                                            String name = scanner.nextLine();
+                                            String name = readLineInput(scanner, "Enter product name: ");
 
-                                            System.out.print("Enter price: ");
-                                            double price = scanner.nextDouble();
+                                            double price = readDoubleInput(scanner, "Enter price: ");
 
-                                            System.out.print("Enter quantity: ");
-                                            int quantity = scanner.nextInt();
-                                            scanner.nextLine();
+                                            int quantity = readIntInput(scanner, "Enter quantity: ");
 
                                             int id = inventory.getNextProductId();// increment for next product
 
@@ -795,7 +691,6 @@ public class Main {
 
                                         } catch (Exception e) {
                                             System.out.println("Invalid input or stock exceeds 100. Please try again.");
-                                            scanner.nextLine();
                                         }
                                     }
                                 break;
@@ -807,17 +702,7 @@ public class Main {
                                     System.out.println("2. Dairy");
                                     System.out.println("3. Snacks");
                                     System.out.println("4. Supplies");
-                                    System.out.print("Chosen section: ");
-
-                                    int removeSectionChoice;
-                                    try {
-                                        removeSectionChoice = scanner.nextInt();
-                                        scanner.nextLine();                                        
-                                    } catch (Exception e) {
-                                        System.out.println("Invalid input. Try again.");
-                                        scanner.nextLine();
-                                        break;
-                                    }
+                                    int removeSectionChoice = readIntInput(scanner, "Chosen section: ");
 
                                     section = "";
 
@@ -854,9 +739,7 @@ public class Main {
                                     while (!done) {
                                         try {
                                             System.out.println();
-                                            System.out.print("Enter product ID (0 to cancel): ");
-                                            int productId = scanner.nextInt();
-                                            scanner.nextLine();
+                                            int productId = readIntInput(scanner, "Enter product ID (0 to cancel): ");
 
                                             if (productId == 0) {
                                                 System.out.println("Cancelled.");
@@ -870,9 +753,7 @@ public class Main {
                                                 continue;
                                             }
 
-                                            System.out.print("Enter quantity to remove (0 to cancel): ");
-                                            int quantityToRemove = scanner.nextInt();
-                                            scanner.nextLine();
+                                            int quantityToRemove = readIntInput(scanner, "Enter quantity to remove (0 to cancel): ");
 
                                             if (quantityToRemove == 0) {
                                                 System.out.println("Cancelled.");
@@ -898,7 +779,6 @@ public class Main {
                                             System.out.println("Please try again.");
                                         } catch (Exception e) {
                                             System.out.println("Invalid input. Please enter numbers only.");
-                                            scanner.nextLine();
                                         }
                                     }
                                     
@@ -911,17 +791,7 @@ public class Main {
                                     System.out.println("2. Dairy");
                                     System.out.println("3. Snacks");
                                     System.out.println("4. Supplies");
-                                    System.out.print("Chosen section: ");
-
-                                    int priceSection;
-                                    try {
-                                        priceSection = scanner.nextInt();
-                                        scanner.nextLine();                                        
-                                    } catch (Exception e) {
-                                        System.out.println("Invalid input. Try again.");
-                                        scanner.nextLine();
-                                        break;
-                                    }
+                                    int priceSection = readIntInput(scanner, "Chosen section: ");
 
                                     String priceSectionChoice = "";
 
@@ -958,18 +828,14 @@ public class Main {
                                     while (!done) {
                                         try {
                                             System.out.println();
-                                            System.out.print("Enter product ID (0 to cancel): ");
-                                            int productId = scanner.nextInt();
-                                            scanner.nextLine();
+                                            int productId = readIntInput(scanner, "Enter product ID (0 to cancel): ");
 
                                             if (productId == 0) {
                                                 System.out.println("Cancelled.");
                                                 break;
                                             }
 
-                                            System.out.print("Enter new price: ");
-                                            double newPrice = scanner.nextDouble();
-                                            scanner.nextLine();
+                                            double newPrice = readDoubleInput(scanner, "Enter new price: ");
 
                                             Products product = inventory.getProduct(priceSectionChoice, productId);
 
@@ -996,7 +862,6 @@ public class Main {
                                             System.out.println("Error: " + e.getMessage());
                                         } catch (Exception e) {
                                             System.out.println("Invalid input. Please try again.");
-                                            scanner.nextLine();
                                         }
                                     }
                                 break;
@@ -1010,17 +875,7 @@ public class Main {
                                     System.out.println("2. Dairy");
                                     System.out.println("3. Snacks");
                                     System.out.println("4. Supplies");
-                                    System.out.print("Chosen section: ");
-
-                                    int restockInventorySectionChoice;
-                                    try {
-                                        restockInventorySectionChoice = scanner.nextInt();
-                                        scanner.nextLine();
-                                    } catch (Exception e) {
-                                        System.out.println("Invalid input. Try again.");
-                                        scanner.nextLine();
-                                        break;
-                                    }
+                                    int restockInventorySectionChoice = readIntInput(scanner, "Chosen section: ");
 
                                     section = "";
 
@@ -1057,9 +912,7 @@ public class Main {
 
                                     while (!done) {
                                         try {
-                                            System.out.print("\nEnter product ID (0 to cancel): ");
-                                            int productId = scanner.nextInt();
-                                            scanner.nextLine();
+                                            int productId = readIntInput(scanner, "\nEnter product ID (0 to cancel): ");
 
                                             if (productId == 0) {
                                                 System.out.println("Cancelled.");
@@ -1073,9 +926,7 @@ public class Main {
                                                 continue;
                                             }
 
-                                            System.out.print("Enter quantity to restock (0 to cancel): ");
-                                            int quantityToRestock = scanner.nextInt();
-                                            scanner.nextLine();
+                                            int quantityToRestock = readIntInput(scanner, "Enter quantity to restock (0 to cancel): ");
 
                                             if (quantityToRestock == 0) {
                                                 System.out.println("Cancelled.");
@@ -1100,7 +951,6 @@ public class Main {
                                             System.out.println("Please try again.");
                                         } catch (Exception e) {
                                             System.out.println("Invalid input. Please enter numbers only.");
-                                            scanner.nextLine();
                                         }
                                     }
                                 break;
@@ -1115,27 +965,13 @@ public class Main {
                                     System.out.println("Choose a customer to view:");
                                     System.out.println("1. Regular Customer");
                                     System.out.println("2. VIP Customer");
-                                    System.out.print("Choose customer: ");
-
-                                    
                                     int customerChoice;
                                     while (true) {
-                                            System.out.print("Enter choice: ");
-
-                                            if (!scanner.hasNextInt()) {
-                                                System.out.println("Invalid input. Please enter 1 or 2.");
-                                                scanner.nextLine();
-                                                continue;
-                                            }
-
-                                            customerChoice = scanner.nextInt();
-                                            scanner.nextLine();
-
-                                            if (customerChoice == 1 || customerChoice == 2) {
-                                                break;
-                                            } else {
-                                                System.out.println("Invalid choice. Please enter 1 or 2.");
-                                            }
+                                        customerChoice = readIntInput(scanner, "Enter choice: ");
+                                        if (customerChoice == 1 || customerChoice == 2) {
+                                            break;
+                                        }
+                                        System.out.println("Invalid choice. Please enter 1 or 2.");
                                     }
 
                                     switch (customerChoice) {
@@ -1202,6 +1038,17 @@ public class Main {
             String input = readLineInput(scanner, prompt);
             try {
                 return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+    private static double readDoubleInput(Scanner scanner, String prompt) {
+        while (true) {
+            String input = readLineInput(scanner, prompt);
+            try {
+                return Double.parseDouble(input);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
