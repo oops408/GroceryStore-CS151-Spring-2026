@@ -1,43 +1,77 @@
 # Grocery Store System – CS151 Project
 
-Project Done by:
-Jonas Quiballo  
-Roman Lozano  
-Vishalkiran Raichur  
-Suparn Posina  
-
 ## Overview 
 This project simulates a grocery store system using Java. It demonstrates object-oriented programming concepts such as inheritance, abstraction, and interfaces.
 
 Users can view customer information, manage a shopping cart, add or remove items, and view VIP customer benefits through a menu-driven interface.
 
-## Design 
-- Products
-- Employee system
-- Customer system
-- Shopping cart
-- inventory
-- Aisles
-- Terminal UI 
-- exception handling 
+The grocery store supports multiple user instances, including Regular Customers, VIP Customers, and Employees. Employees have role-based access as either Managers or Stockers. The application allows customers to browse aisles, add items to a cart, and check out, while employees can manage inventory, restock products, and view customer purchase history.
 
-## Installation instructions
+Key features:
+- **Customer Accounts**: Sign up and sign in as Regular or VIP customers
+- **Shopping Cart System**: Add, remove, clear, and view cart items
+- **Checkout System**: Print receipts, apply tax, apply VIP discounts, and award VIP points
+- **Inventory Management**: Add, remove, restock, search, and update products
+- **Aisle Browsing**: Browse aisle-based product displays and buy directly from aisles
+- **Employee Roles**: Separate workflows for Managers and Stockers
+- **Purchase History**: Save receipts to customer history for later review
+- **Custom Exceptions**: Input and store validation through dedicated exception classes
+
+---
+
+## Design
+
+### Project Structure
+
+| Package | Classes | Description |
+|---------|---------|-------------|
+| `default` | `Main` | Entry point of the application |
+| `aisles` | `Aisles` | Represents grocery store aisles and shelf groupings of products |
+| `auth` | `AccountService` | Handles customer and employee sign-up/sign-in logic |
+| `cart` | `ShoppingCart` | Stores cart items for customers |
+| `checkout` | `Checkout` | Handles receipt generation, tax, discounts, and checkout flow |
+| `customers` | `Customer`, `RegularCustomer`, `VIPCustomer`, `Displayable`, `CustomerIdRegistry` | Customer hierarchy, display behavior, and ID generation |
+| `data` | `StoreDataLoader` | Loads default aisle and product data |
+| `employee` | `Employee`, `Manager`, `Stocker`, `EmployeeMenu`, `EmployeeIdRegistry` | Employee hierarchy, employee operations, and employee portal |
+| `exceptions` | `CapacityExceededException`, `DuplicateProductException`, `InvalidPriceException`, `InvalidProductException`, `InvalidQuantityException`, `InvalidSectionException`, `NotFoundException` | Custom runtime exceptions for validation and error handling |
+| `input` | `ConsoleInput` | Shared console input helper with EXIT support |
+| `inventory` | `Inventory`, `InventoryConsoleDemo` | Inventory storage, product lookup, stock management, and demo testing |
+| `menu` | `StoreMenus` | Contains menu/session flows for all portals |
+| `products` | `Products` | Represents a grocery product with ID, price, and quantity |
+| `shelf` | `Shelf` | Represents individual store shelves and shelf-level product management |
+| `test` | JUnit test classes | Unit tests for system behavior |
+
+### Patterns Used
+
+- **Inheritance**: `Customer` is the abstract base class for `RegularCustomer` and `VIPCustomer`, while `Employee` is the abstract base class for `Manager` and `Stocker`
+- **Polymorphism**: Customer and employee objects are used through their parent types, allowing different runtime behavior depending on subclass
+- **Composition**: A `Customer` owns a `ShoppingCart`, and the checkout process builds receipts from the customer's cart contents
+- **Aggregation**: `Inventory`, `Shelf`, and `Aisles` all manage collections of `Products`
+- **Encapsulation**: Fields are kept private/protected and accessed through methods
+- **Single Responsibility**: Each class has a focused role — `Checkout` handles receipts, `Inventory` handles stock, `AccountService` handles account actions, etc.
+- **Utility Class Design**: Classes like `Checkout`, `ConsoleInput`, `StoreMenus`, and `AccountService` use static methods and private constructors because they are service/helper classes
+
+---
+
+## Installation
 
 ### Prerequisites
-- **Java JDK 17 or newer** (matches `pom.xml` compiler settings)
-- **Git** (to clone the repository)
+- Java JDK 17 or higher (21 Preferred for Unit Testing)
+- Git
+- A Java IDE or command line terminal
+- JUnit 5 if running tests manually
 
-### Get the code from GitHub
-Clone the repository, then enter the project folder:
+### Command Line
 
+# 1. Clone repository from Terminal into project folder
 ```bash
-git clone https://github.com/oops408/GroceryStore-CS151-Spring-2026.git
+mkdir GroceryStore-CS151-Spring-2026
+cd GroceryStore-CS151-Spring-2026
+git clone https://github.com/oops408/GroceryStore-CS151-Spring-2026
 cd GroceryStore-CS151-Spring-2026
 ```
 
-(SSH: `git clone git@github.com:oops408/GroceryStore-CS151-Spring-2026.git`)
-
-### Compile
+# 2. Compile all source files
 From the project root (where `src` and `pom.xml` live):
 
 **Option A — `javac` (no Maven):**
@@ -50,7 +84,7 @@ javac -cp src -sourcepath src src/Main.java
 mvn -q compile
 ```
 
-### Run `Main`
+# 3. Run the application
 After compiling with **Option A**, run:
 
 ```bash
@@ -66,6 +100,8 @@ java -cp target/classes Main
 The program starts in the terminal with the grocery store role menu. Type **`EXIT`** at any prompt to quit immediately (case-insensitive).
 
 ## Usage
+
+Video Link: TBD
 
 This project simulates a grocery store: **customers** shop (cart, aisles, checkout), and **employees** (stockers and managers) manage shelves and inventory.
 
@@ -112,19 +148,29 @@ Opens the **Employee menu** (`EmployeeMenu`): choose **Stocker** or **Manager**,
 | Inventory & shelves | `inventory/`, `shelf/` |
 
 ## Contributions 
-    - Jonas Quiballo
+**Jonas Quiballo**
 
 
 
-    - Roman Lozano 
-    Organized the the menu/UI grocery store simulation: ensured the menus had proper flow into eachother and all methods were accesible
-    through terminal. Completed **aisles** with shelf stock and shopping, Compelted the DataLoader to organize main, started the 
-    Foundation for products. Compelted the saftely EXIT extra credit.
+**Roman Lozano**
+- Organized the the menu/UI grocery store simulation: ensured the menus had proper flow into eachother and all methods were accesible through terminal. - Completed **aisles** with shelf stock and shopping,
+- Completed the DataLoader to organize main, started the Foundation for products.
+- Completed the saftely EXIT extra credit.
 
 
-    - Vishalkiran Raichur  
+**Vishalkiran Raichur**
 
 
 
 
-    -Suparn Posina
+**Suparn Posina (oops408)**
+- Creating initial repository and structure
+- Core system architecture and integration (**Main**, **StoreMenu**)
+- Full **Inventory** system (product storage, search, stock management, low stock tracking)
+- Redesigned **Checkout** system for receipt generation
+- Account handling with **AccountService**
+- **EmployeeMenu** logic, (restocking, updating price, customer history, control inventory)
+- Implemented Full Custom Exception Handling (CapacityExceededException, InvalidProductException, InvalidQuantityException, InvalidSectionException, DuplicateProductException, NotFoundException)
+- UML diagram design and updating across full structure
+- JUnit Unit Testing and Maven integration for debugging all major components
+- Code Integration and Error Handling Across all subsystems
