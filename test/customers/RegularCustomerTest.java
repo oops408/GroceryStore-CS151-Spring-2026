@@ -34,4 +34,26 @@ public class RegularCustomerTest {
         assertTrue(text.contains("101"));
         assertTrue(text.contains("Vishal"));
     }
+
+    @Test
+    void addPurchaseRecordShouldStoreHistory() {
+        customer.addPurchaseRecord("Receipt #1");
+        assertEquals(1, customer.getPurchaseHistory().size());
+        assertEquals("Receipt #1", customer.getPurchaseHistory().get(0));
+    }
+
+    @Test
+    void addPurchaseRecordShouldIgnoreBlankText() {
+        customer.addPurchaseRecord("   ");
+
+        assertTrue(customer.getPurchaseHistory().isEmpty());
+    }
+
+    @Test
+    void getPurchaseHistoryShouldBeUnmodifiable() {
+        customer.addPurchaseRecord("Receipt #1");
+
+        assertThrows(UnsupportedOperationException.class,
+                () -> customer.getPurchaseHistory().add("Receipt #2"));
+    }
 }

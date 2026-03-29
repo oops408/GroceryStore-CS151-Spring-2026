@@ -88,4 +88,12 @@ public class ManagerTest {
     void viewCustomerHistoryShouldNotThrowForNullCustomer() {
         assertDoesNotThrow(() -> manager.viewCustomerHistory(null));
     }
+
+    @Test
+    void viewCustomerHistoryShouldShowSavedHistory() {
+        RegularCustomer customer = new RegularCustomer(101, "Vishal", "Raichur");
+        customer.addPurchaseRecord("Receipt #1");
+
+        assertDoesNotThrow(() -> manager.viewCustomerHistory(customer));
+    }
 }

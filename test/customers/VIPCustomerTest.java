@@ -41,4 +41,17 @@ public class VIPCustomerTest {
     void vipCustomerShouldHaveCart() {
         assertNotNull(vipCustomer.getCart());
     }
+
+    @Test
+    void vipCustomerShouldStorePurchaseHistory() {
+        vipCustomer.addPurchaseRecord("VIP Receipt");
+
+        assertEquals(1, vipCustomer.getPurchaseHistory().size());
+        assertEquals("VIP Receipt", vipCustomer.getPurchaseHistory().get(0));
+    }
+
+    @Test
+    void viewVipBenefitsShouldNotThrow() {
+        assertDoesNotThrow(() -> vipCustomer.viewVIPBenefits());
+    }
 }
