@@ -5,24 +5,33 @@ import checkout.Checkout;
 import customers.Customer;
 import customers.RegularCustomer;
 import customers.VIPCustomer;
+import employee.Employee;
 import employee.EmployeeMenu;
 import input.ConsoleInput;
 import inventory.Inventory;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import products.Products;
 import shelf.Shelf;
+
 // Menu templates and information live here so Main stays uncluttered.
 public final class StoreMenus {
 
     private StoreMenus() {
     }
-// regular customer information
-    public static void runRegularCustomerSession(Scanner scanner, RegularCustomer customer,
-            Inventory inventory, List<Aisles> aisles) {
+
+    public static void runRegularCustomerSession(
+            Scanner scanner,
+            RegularCustomer customer,
+            Inventory inventory,
+            List<Aisles> aisles) {
+
         int sub = -1;
         while (sub != 8) {
             System.out.println("\n--- Regular customer ---");
+            System.out.println("Signed in as: " + customer.getFullName()
+                    + " (ID " + customer.getCustomerId() + ")");
             System.out.println("1. View my customer info");
             System.out.println("2. View my cart");
             System.out.println("3. Add item to my cart");
@@ -30,7 +39,7 @@ public final class StoreMenus {
             System.out.println("5. Clear my cart");
             System.out.println("6. View aisles (browse / buy)");
             System.out.println("7. Checkout / print receipt");
-            System.out.println("8. Back to main menu");
+            System.out.println("8. Sign out (type exit to quit the program)");
             sub = ConsoleInput.readInt(scanner, "Choose an option: ");
 
             switch (sub) {
@@ -42,33 +51,42 @@ public final class StoreMenus {
                     System.out.println("Total items: " + customer.getCart().getTotalItems());
                     break;
                 case 3:
-                    customer.getCart().addItem(ConsoleInput.readLine(scanner, "Enter item to add: "));
+                    customer.getCart().addItem(
+                            ConsoleInput.readLine(scanner, "Enter item to add: "));
                     break;
                 case 4:
-                    customer.getCart().removeItem(ConsoleInput.readLine(scanner, "Enter item to remove: "));
+                    customer.getCart().removeItem(
+                            ConsoleInput.readLine(scanner, "Enter item to remove: "));
                     break;
                 case 5:
                     customer.getCart().clearCart();
                     break;
                 case 6:
-                    runAislesSession(scanner, aisles, customer, null);
+                    runAislesSession(scanner, aisles, customer);
                     break;
                 case 7:
                     Checkout.printReceipt(customer, inventory, aisles);
                     break;
                 case 8:
+                    System.out.println("Signed out.");
                     break;
                 default:
                     System.out.println("Invalid choice.");
             }
         }
     }
-// users select options based on terminal prompts
-    public static void runVipCustomerSession(Scanner scanner, VIPCustomer customer,
-            Inventory inventory, List<Aisles> aisles, RegularCustomer otherCustomer) {
+
+    public static void runVipCustomerSession(
+            Scanner scanner,
+            VIPCustomer customer,
+            Inventory inventory,
+            List<Aisles> aisles) {
+
         int sub = -1;
         while (sub != 9) {
             System.out.println("\n--- VIP customer ---");
+            System.out.println("Signed in as: " + customer.getFullName()
+                    + " (ID " + customer.getCustomerId() + ")");
             System.out.println("1. View my customer info");
             System.out.println("2. View my cart");
             System.out.println("3. Add item to my cart");
@@ -77,7 +95,7 @@ public final class StoreMenus {
             System.out.println("6. View VIP benefits");
             System.out.println("7. View aisles (browse / buy)");
             System.out.println("8. Checkout / print receipt");
-            System.out.println("9. Back to main menu");
+            System.out.println("9. Sign out (type exit to quit the program)");
             sub = ConsoleInput.readInt(scanner, "Choose an option: ");
 
             switch (sub) {
@@ -89,10 +107,12 @@ public final class StoreMenus {
                     System.out.println("Total items: " + customer.getCart().getTotalItems());
                     break;
                 case 3:
-                    customer.getCart().addItem(ConsoleInput.readLine(scanner, "Enter item to add: "));
+                    customer.getCart().addItem(
+                            ConsoleInput.readLine(scanner, "Enter item to add: "));
                     break;
                 case 4:
-                    customer.getCart().removeItem(ConsoleInput.readLine(scanner, "Enter item to remove: "));
+                    customer.getCart().removeItem(
+                            ConsoleInput.readLine(scanner, "Enter item to remove: "));
                     break;
                 case 5:
                     customer.getCart().clearCart();
@@ -101,12 +121,13 @@ public final class StoreMenus {
                     customer.viewVIPBenefits();
                     break;
                 case 7:
-                    runAislesSession(scanner, aisles, otherCustomer, customer);
+                    runAislesSession(scanner, aisles, customer);
                     break;
                 case 8:
                     Checkout.printReceipt(customer, inventory, aisles);
                     break;
                 case 9:
+                    System.out.println("Signed out.");
                     break;
                 default:
                     System.out.println("Invalid choice.");
@@ -114,22 +135,24 @@ public final class StoreMenus {
         }
     }
 
-    /**
-     * @param primaryCart  regular customer (used for "1" when picking cart at checkout from aisle)
-     * @param secondaryCart VIP customer (used for "2"), or null when session is regular-only
-     */
-    private static void runAislesSession(Scanner scanner, List<Aisles> aisles,
-            RegularCustomer primaryCart, VIPCustomer secondaryCart) {
+    private static void runAislesSession(
+            Scanner scanner,
+            List<Aisles> aisles,
+            Customer activeCustomer) {
+
         boolean viewingAisles = true;
+
         while (viewingAisles) {
             System.out.println("\nAvailable aisles:");
             for (Aisles aisle : aisles) {
-                System.out.println("- Aisle " + aisle.getAisleNumber() + " (" + aisle.getAisleType() + ")");
+                System.out.println("- Aisle " + aisle.getAisleNumber()
+                        + " (" + aisle.getAisleType() + ")");
             }
             System.out.println("0. Back");
 
             try {
-                int selectedAisleNumber = ConsoleInput.readInt(scanner, "Enter aisle number to view: ");
+                int selectedAisleNumber =
+                        ConsoleInput.readInt(scanner, "Enter aisle number to view: ");
 
                 if (selectedAisleNumber == 0) {
                     viewingAisles = false;
@@ -166,30 +189,6 @@ public final class StoreMenus {
                         continue;
                     }
 
-                    Customer cartCustomer;
-                    if (secondaryCart == null) {
-                        cartCustomer = primaryCart;
-                    } else if (primaryCart == null) {
-                        cartCustomer = secondaryCart;
-                    } else {
-                        System.out.println("1. Regular customer's cart (ID " + primaryCart.getCustomerId() + ")");
-                        System.out.println("2. VIP customer's cart (ID " + secondaryCart.getCustomerId() + ")");
-                        int cartOwner = ConsoleInput.readInt(scanner, "Whose cart should this go to? ");
-                        if (cartOwner == 1) {
-                            cartCustomer = primaryCart;
-                        } else if (cartOwner == 2) {
-                            cartCustomer = secondaryCart;
-                        } else {
-                            System.out.println("Invalid choice.");
-                            continue;
-                        }
-                    }
-
-                    if (cartCustomer == null) {
-                        System.out.println("No customer cart is available.");
-                        continue;
-                    }
-
                     int productIdToBuy = ConsoleInput.readInt(scanner, "Enter product ID to buy: ");
                     int quantityToBuy = ConsoleInput.readInt(scanner, "Enter quantity to buy: ");
 
@@ -212,28 +211,52 @@ public final class StoreMenus {
                     }
 
                     if (selectedProduct.getQuantity() < quantityToBuy) {
-                        System.out.println("Not enough stock. Available: " + selectedProduct.getQuantity());
+                        System.out.println("Not enough stock. Available: "
+                                + selectedProduct.getQuantity());
                         continue;
                     }
 
-                    selectedProduct.setQuantity(selectedProduct.getQuantity() - quantityToBuy);
+                    selectedProduct.setQuantity(
+                            selectedProduct.getQuantity() - quantityToBuy);
+
                     for (int i = 0; i < quantityToBuy; i++) {
-                        cartCustomer.getCart().addItem(selectedProduct.getName());
+                        activeCustomer.getCart().addItem(selectedProduct.getName());
                     }
 
-                    System.out.println("Added " + quantityToBuy + " x " + selectedProduct.getName()
-                            + " to customer " + cartCustomer.getCustomerId() + "'s cart.");
+                    System.out.println("Added " + quantityToBuy + " x "
+                            + selectedProduct.getName() + " to "
+                            + activeCustomer.getFullName() + "'s cart.");
                 }
+
             } catch (Exception e) {
                 System.out.println("Invalid input.");
             }
         }
     }
 
-    public static void runEmployeeSession(Scanner scanner, Inventory inventory, List<Aisles> aisles,
-            RegularCustomer customer1, VIPCustomer customer2,
-            Shelf produceShelf, Shelf dairyShelf, Shelf snacksShelf, Shelf suppliesShelf) {
-        EmployeeMenu.run(scanner, inventory, customer1, customer2,
-                produceShelf, dairyShelf, snacksShelf, suppliesShelf, aisles);
+    public static void runEmployeeSession(
+            Scanner scanner,
+            Inventory inventory,
+            List<Aisles> aisles,
+            Map<Integer, RegularCustomer> regularCustomers,
+            Map<Integer, VIPCustomer> vipCustomers,
+            Shelf produceShelf,
+            Shelf dairyShelf,
+            Shelf snacksShelf,
+            Shelf suppliesShelf,
+            Employee signedInEmployee) {
+
+        EmployeeMenu.run(
+                scanner,
+                inventory,
+                regularCustomers,
+                vipCustomers,
+                produceShelf,
+                dairyShelf,
+                snacksShelf,
+                suppliesShelf,
+                aisles,
+                signedInEmployee
+        );
     }
 }

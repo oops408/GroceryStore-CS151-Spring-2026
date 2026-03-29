@@ -17,8 +17,15 @@ public class VIPCustomer extends Customer {
     }
 
     // Returns the discount rate for this VIP customer
+    @Override
     public double getDiscountRate() {
         return discountRate;
+    }
+
+    public void setDiscountRate(double discountRate) {
+        if (discountRate >= 0 && discountRate <= 1) {
+            this.discountRate = discountRate;
+        }
     }
 
     // Returns the current reward points of the customer
@@ -33,10 +40,26 @@ public class VIPCustomer extends Customer {
         }
     }
 
+    public void redeemPoints(int pointsToRedeem) {
+        if (pointsToRedeem > 0 && pointsToRedeem <= points) {
+            points -= pointsToRedeem;
+        }
+    }
+
     // Displays VIP benefits including discount and reward points
     public void viewVIPBenefits() {
         System.out.println("VIP Customer: " + firstName + " " + lastName);
-        System.out.println("Discount Rate: " + discountRate);
+        System.out.println("Discount Rate: " + (discountRate * 100) + "%");
         System.out.println("Points: " + points);
+    }
+
+    @Override
+    public void viewBenefits() {
+        viewVIPBenefits();
+    }
+
+    @Override
+    public String getAccountType() {
+        return "VIP";
     }
 }

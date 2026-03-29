@@ -110,9 +110,16 @@ public class Aisles
         return allProducts;
     }
 
+    // used for testing, cannot modify the shelves through this method
     public Map<Integer, List<Products>> getShelves()
     {
         return Collections.unmodifiableMap(shelves);
+    }
+
+    // direct access to shelves for internal use in checkout
+    public Map<Integer, List<Products>> getDirectShelves()
+    {
+        return shelves;
     }
 
     public void printAisle() 

@@ -1,6 +1,11 @@
 package customers;
 
 import cart.ShoppingCart;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import cart.ShoppingCart;
 
 // Abstract base class for all customers in the grocery store system
 public abstract class Customer implements Displayable {
@@ -10,6 +15,7 @@ public abstract class Customer implements Displayable {
     protected String firstName;
     protected String lastName;
     protected ShoppingCart cart;
+    private List<String> purchaseHistory;
 
     // Constructor to create a customer with basic details
     public Customer(int customerId, String firstName, String lastName) {
@@ -17,6 +23,7 @@ public abstract class Customer implements Displayable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.cart = new ShoppingCart();
+        this.purchaseHistory = new ArrayList<>();
     }
 
     // Returns the customer ID
@@ -48,11 +55,40 @@ public abstract class Customer implements Displayable {
         return 0.0;
     }
 
+    public void addPurchaseRecord(String record) {
+        if (record != null && !record.trim().isEmpty()) {
+            purchaseHistory.add(record);
+        }
+    }
+
+    public List<String> getPurchaseHistory() {
+        return Collections.unmodifiableList(purchaseHistory);
+    }
+
+
     // for Manager
     public void printCustomerHistory() {
-    System.out.println("No purchase history available yet.");
-}
+        if (purchaseHistory.isEmpty()) {
+            System.out.println("No purchase history available yet.");
+            return;
+        }
 
+        System.out.println("Purchase history:");
+        for (int i = 0; i < purchaseHistory.size(); i++) {
+            System.out.println("Order " + (i + 1) + ":");
+            System.out.println(purchaseHistory.get(i));
+            System.out.println();
+        }
+    }
+
+    public abstract String getAccountType();
+
+    public abstract void viewBenefits();
+
+    public void applyLoyaltyReward(double totalSpent) {
+        // default customer gets no extra reward
+    }
+    
     // Displays customer information
     @Override
     public void displayCustomerInfo() {

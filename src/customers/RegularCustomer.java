@@ -12,4 +12,21 @@ public class RegularCustomer extends Customer {
     public void signUpForVIP() {
         System.out.println(firstName + " " + lastName + " signed up for VIP membership.");
     }
+
+    public void browseStore() {
+        System.out.println(getFullName() + " is browsing the store.");
+    }
+
+    public void viewCartSummary() {
+        System.out.println("Cart contains " + getCart().getTotalItems() + " item(s).");
+    }
+    @Override
+    public void viewBenefits() {
+        System.out.println("Regular customer benefits: standard shopping access.");
+    }
+
+    @Override
+    public String getAccountType() {
+        return "Regular";
+    }
 }

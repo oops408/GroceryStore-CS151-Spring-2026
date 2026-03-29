@@ -2,6 +2,7 @@ package checkout;
 
 import aisles.Aisles;
 import customers.Customer;
+import customers.VIPCustomer;
 import inventory.Inventory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,25 +21,24 @@ public final class Checkout {
     private Checkout() {
     }
 
-    // Prints receipt without aisle data (default case)
     public static void printReceipt(Customer customer, Inventory inventory) {
         printReceipt(customer, inventory, null);
     }
 
+    // Prints receipt without aisle data (default case)
     // Main checkout method that generates receipt with optional aisle support
     public static void printReceipt(Customer customer, Inventory inventory, List<Aisles> aisles) {
-        List<String> rawItems = customer.getCart().getItemsSnapshot(); // Get items from customer's cart (snapshot to avoid modification issues)
+        List<String> rawItems = customer.getCart().getItemsSnapshot(); // get items from Customer cart
+
         if (rawItems.isEmpty()) {
             System.out.println("Cart is empty. Nothing to checkout.");
             return;
         }
 
-        // Generate unique transaction ID and timestamp
         long transactionId = nextTransactionId++;
         LocalDateTime timestamp = LocalDateTime.now();
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        // Group duplicate items and count quantities using a map
         Map<String, Integer> lineCounts = new LinkedHashMap<>();
         for (String item : rawItems) {
             String key = item == null ? "" : item.trim();
@@ -56,49 +56,63 @@ public final class Checkout {
         double subtotal = 0.0;
         StringBuilder lineDetails = new StringBuilder();
 
-        // Calculate subtotal by iterating through each item and its quantity
         for (Map.Entry<String, Integer> entry : lineCounts.entrySet()) {
             String name = entry.getKey();
             int qty = entry.getValue();
             double unitPrice = resolveUnitPrice(name, inventory, aisles);
             double lineTotal = unitPrice * qty;
             subtotal += lineTotal;
-            lineDetails.append(String.format("  %-24s  x%-3d  @ $%-7.2f  = $%.2f%n",
+
+            lineDetails.append(String.format(
+                    "  %-24s  x%-3d  @ $%-7.2f  = $%.2f%n",
                     name, qty, unitPrice, lineTotal));
         }
 
-        // Apply discount and tax to compute final total
         double discountRate = clampDiscount(customer.getDiscountRate());
         double discountAmount = subtotal * discountRate;
         double afterDiscount = subtotal - discountAmount;
         double tax = afterDiscount * TAX_RATE;
         double total = afterDiscount + tax;
 
-        System.out.println();
-        System.out.println("========================================");
-        System.out.println("            GROCERY STORE RECEIPT");
-        System.out.println("========================================");
-        System.out.println("Transaction ID:  " + transactionId);
-        System.out.println("Customer ID:     " + customer.getCustomerId());
-        System.out.println("Date / Time:     " + timestamp.format(timeFormat));
-        System.out.println("----------------------------------------");
-        System.out.println("ITEMS");
-        System.out.print(lineDetails);
-        System.out.println("----------------------------------------");
-        System.out.printf("Subtotal (items):     $%.2f%n", subtotal);
-        if (discountRate > 0) {
-            System.out.printf("VIP discount (%.1f%%): -$%.2f%n", discountRate * 100, discountAmount);
-        } else {
-            System.out.println("Discount:             $0.00");
-        }
-        System.out.printf("After discount:       $%.2f%n", afterDiscount);
-        System.out.printf("Tax (9.5%%):          $%.2f%n", tax);
-        System.out.println("----------------------------------------");
-        System.out.printf("TOTAL:                $%.2f%n", total);
-        System.out.println("========================================");
-        System.out.println();
+        StringBuilder receipt = new StringBuilder();
+        receipt.append(System.lineSeparator());
+        receipt.append("========================================").append(System.lineSeparator());
+        receipt.append("            GROCERY STORE RECEIPT").append(System.lineSeparator());
+        receipt.append("========================================").append(System.lineSeparator());
+        receipt.append("Transaction ID:  ").append(transactionId).append(System.lineSeparator());
+        receipt.append("Customer ID:     ").append(customer.getCustomerId()).append(System.lineSeparator());
+        receipt.append("Customer Name:   ").append(customer.getFullName()).append(System.lineSeparator());
+        receipt.append("Date / Time:     ").append(timestamp.format(timeFormat)).append(System.lineSeparator());
+        receipt.append("----------------------------------------").append(System.lineSeparator());
+        receipt.append("ITEMS").append(System.lineSeparator());
+        receipt.append(lineDetails);
+        receipt.append("----------------------------------------").append(System.lineSeparator());
+        receipt.append(String.format("Subtotal (items):     $%.2f%n", subtotal));
 
-        // Clear cart after successful checkout
+        if (discountRate > 0) {
+            receipt.append(String.format("VIP discount (%.1f%%): -$%.2f%n",
+                    discountRate * 100, discountAmount));
+        } else {
+            receipt.append("Discount:             $0.00").append(System.lineSeparator());
+        }
+
+        receipt.append(String.format("After discount:       $%.2f%n", afterDiscount));
+        receipt.append(String.format("Tax (9.5%%):           $%.2f%n", tax));
+        receipt.append("----------------------------------------").append(System.lineSeparator());
+        receipt.append(String.format("TOTAL:                $%.2f%n", total));
+        receipt.append("========================================").append(System.lineSeparator());
+
+        System.out.println(receipt);
+
+        customer.addPurchaseRecord(receipt.toString());
+
+        if (customer instanceof VIPCustomer vipCustomer) {
+            int pointsEarned = (int) total;
+            vipCustomer.addPoints(pointsEarned);
+            System.out.println("VIP points earned: " + pointsEarned);
+            System.out.println("Total VIP points: " + vipCustomer.getPoints());
+        }
+
         customer.getCart().clearCart();
     }
 
@@ -111,6 +125,7 @@ public final class Checkout {
         }
         return rate;
     }
+    
     // Resolve item price from inventory or aisles
     private static double resolveUnitPrice(String name, Inventory inventory, List<Aisles> aisles) {
         Products fromInventory = inventory.findProductByExactName(name);
@@ -127,5 +142,23 @@ public final class Checkout {
             }
         }
         return 0.0;
+    }
+
+    // Helper method to find a product by name across all aisles
+    private static Products findProductByName(String name, List<Aisles> aislesList) {
+        if (name == null || aislesList == null) return null;
+
+        for (Aisles aisle : aislesList) {
+            for (List<Products> shelfProducts : aisle.getDirectShelves().values()) {
+                for (Products product : shelfProducts) {
+
+                    // 🔥 FIX: trim + case-insensitive comparison
+                    if (product.getName().trim().equalsIgnoreCase(name.trim())) {
+                        return product;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
