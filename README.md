@@ -136,6 +136,19 @@ Opens the **Employee menu** (`EmployeeMenu`): choose **Stocker** or **Manager**,
 - Cart items added by **name** price correctly at checkout if the name matches a product in **inventory** or on an **aisle** (case-insensitive).
 - If **`javac`** fails with “major version” warnings, use a JDK version that matches or exceeds the one used to compile existing `.class` files, or delete stray `*.class` under `src` and recompile.
 
+
+## Example Purchase
+
+| Type | Details |
+|------|---------|
+| **Aisles** | Aisle 1 (Dairy), Aisle 2 (Fruits), Aisle 3 (Meats) |
+| **Fruits (Aisle 2)** | Apples ($1.99), Bananas ($0.79), Oranges ($1.29), Strawberries ($3.99), Blueberries ($4.49), Grapes ($2.99), Mangos ($1.49), Pineapples ($3.49), Peaches ($2.29), Pears ($1.89), Watermelon ($5.99), Kiwi ($0.99), Cherries ($3.79), Plums ($2.19), Lemons ($0.89) |
+| **Meats (Aisle 3)** | Chicken Breast ($6.99), Ground Beef ($5.49), Turkey ($4.99), Pork Chops ($6.49), Salmon ($8.99), Tuna ($7.49), Bacon ($5.99), Sausage ($4.49), Ham ($5.29), Steak ($10.99), Lamb Chops ($11.49), Shrimp ($9.99), Tilapia ($7.99), Cod ($8.49), Meatballs ($6.29) |
+| **Sample Customer** | John Doe — Customer ID: `1` |
+| **Sample Purchase** | 3 × Lemons, 2 × Shrimp |
+| **Sample Total** | Subtotal: $22.65, Tax: $2.15, Total: $24.80 |
+
+
 ### Project layout (high level)
 | Area | Package / location |
 |------|-------------------|
