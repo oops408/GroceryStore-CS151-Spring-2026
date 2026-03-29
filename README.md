@@ -162,7 +162,10 @@ Opens the **Employee menu** (`EmployeeMenu`): choose **Stocker** or **Manager**,
 
 ## Contributions 
 **Jonas Quiballo**
-
+- Implemented Employee System of shelf, employee, stocker, and manager
+- Developed shelf to add products into shelf, and check for low stocks
+- Stocker: view low stock, restock products, and view shelves
+- Manager: add/remove product to inventory, change price, and view customer info/history
 
 
 **Roman Lozano**
